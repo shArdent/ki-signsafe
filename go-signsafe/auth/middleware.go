@@ -59,7 +59,7 @@ func SignSafeMiddleware(next http.Handler) http.Handler {
 
 		message := fmt.Sprintf("%s|%s|%s|%s", userID, timestampStr, nonce, string(canonicalBody))
 		if err := VerifySignature(message, signature, pubKey); err != nil {
-			http.Error(w, "invalid signature", http.StatusUnauthorized)
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
@@ -69,12 +69,12 @@ func SignSafeMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		db.RedisClient.SetNX(ctx, nonce, "1", 5*time.Minute)
+
 		if err := ValidateTimestamp(timestampStr); err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-
-		db.RedisClient.SetNX(ctx, nonce, "1", 5*time.Minute)
 
 		ctxWithUser := context.WithValue(r.Context(), UserIDContextKey, userID)
 		next.ServeHTTP(w, r.WithContext(ctxWithUser))

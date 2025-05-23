@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"ewallet-backend/auth"
 	"ewallet-backend/db"
 	"ewallet-backend/handlers"
+	"ewallet-backend/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -43,8 +45,10 @@ func main() {
 		return nil
 	})
 
-	mainLogger.Println("Server running on port 8000...")
-	if err := http.ListenAndServe(":8000", r); err != nil {
+	PORT := utils.GetEnv("PORT", "8000")
+
+	mainLogger.Printf("Server running on port %s...", PORT)
+	if err := http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", PORT), r); err != nil {
 		mainLogger.Fatal("Server failed to start: ", err)
 	}
 }

@@ -6,10 +6,12 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
+	"log"
 	"time"
 )
 
 func VerifySignature(message string, signatureBase64 string, pubKey *rsa.PublicKey) error {
+	log.Println(message)
 	hashed := sha256.Sum256([]byte(message))
 	signature, err := base64.StdEncoding.DecodeString(signatureBase64)
 	if err != nil {
@@ -18,7 +20,7 @@ func VerifySignature(message string, signatureBase64 string, pubKey *rsa.PublicK
 
 	err = rsa.VerifyPKCS1v15(pubKey, crypto.SHA256, hashed[:], signature)
 	if err != nil {
-		return errors.New("invalid iignature")
+		return err
 	}
 
 	return nil
