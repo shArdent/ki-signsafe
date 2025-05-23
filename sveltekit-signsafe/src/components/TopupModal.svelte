@@ -1,5 +1,5 @@
 <script lang="ts">
-	import api from '$lib/api';
+	import{ api} from '$lib/api';
 	import { loadUserID } from '$lib/keyStore';
 	import { sendSignedRequest } from '$lib/sign';
 	import { Upload } from '@lucide/svelte';
@@ -22,8 +22,6 @@
 			user_id: userID,
 			amount
 		};
-
-		console.log(payload);
 
 		try {
 			const res = await sendSignedRequest('POST', '/topup', payload);

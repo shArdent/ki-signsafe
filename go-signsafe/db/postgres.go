@@ -40,7 +40,7 @@ func GetUserPublicKey(userID string) (*rsa.PublicKey, error) {
 		return nil, fmt.Errorf("failed to parse JWK string for user %s: %w", userID, err)
 	}
 
-	var raw interface{}
+	var raw any
 	if err := key.Raw(&raw); err != nil {
 		return nil, fmt.Errorf("failed to get raw key from JWK for user %s: %w", userID, err)
 	}

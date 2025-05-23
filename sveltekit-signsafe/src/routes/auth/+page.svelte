@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { loadUserID, savePrivateKey } from '$lib/keyStore';
-	import api from '$lib/api';
+	import {api} from '$lib/api';
 	import { fade, scale } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import toast, { Toaster } from 'svelte-french-toast';

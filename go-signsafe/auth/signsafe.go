@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
-	"log"
 	"time"
 )
 
@@ -26,14 +25,12 @@ func VerifySignature(message string, signatureBase64 string, pubKey *rsa.PublicK
 }
 
 func ValidateTimestamp(ts string) error {
-	log.Println(ts)
 	clientTime, err := time.Parse(time.RFC3339, ts)
 	if err != nil {
 		return errors.New(("invalid timestamp format"))
 	}
 
 	diff := time.Since(clientTime)
-	log.Printf("diff: %s", diff)
 	if diff > 5*time.Minute || diff < -5*time.Minute {
 		return errors.New("timestamp expired or invalid")
 	}
