@@ -8,7 +8,7 @@ RUN bun install
 
 COPY ./sveltekit-signsafe ./
 
-RUN bun run build
+RUN bun run prepare - bun run build
 
 EXPOSE 5173
 

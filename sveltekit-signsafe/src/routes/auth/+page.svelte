@@ -31,7 +31,7 @@
 		isLoading = true;
 		error = '';
 		try {
-			const { privateKey, publicKey } = await crypto.subtle.generateKey(
+			const { privateKey, publicKey } = await window.crypto.subtle.generateKey(
 				{
 					name: 'RSASSA-PKCS1-v1_5',
 					modulusLength: 2048,
