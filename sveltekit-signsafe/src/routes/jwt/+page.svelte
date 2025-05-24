@@ -22,6 +22,7 @@
 			actualUserInfo = userData;
 			history = historyData;
 		} catch (e) {
+			console.log(e);
 			console.error('Error fetching user info on client:', e);
 			error = e;
 		} finally {
@@ -74,7 +75,7 @@
 			</div>
 
 			<div class="flex w-full flex-col gap-4">
-				{#if history.length <= 0}
+				{#if !history || history.length <= 0}
 					<p class="w-full text-center text-gray-500">Belum ada riwayat transaksi.</p>
 				{:else}
 					{#each history as item}

@@ -12,6 +12,8 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - appnet
 
   redis:
     image: redis:7
@@ -21,8 +23,76 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - appnet
+
+  signsafe:
+    build:
+      context: .
+      dockerfile: ./go-signsafe/Dockerfile
+    container_name: go_signsafe
+    restart: always
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000" # map ke luar jika dibutuhkan
+    environment:
+      PORT: 8000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ewallet_user
+      DB_PASS: ewallet_pass
+      DB_NAME: ewallet_db
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    networks:
+      - appnet
+
+  signsafe-jwt:
+    build:
+      context: .
+      dockerfile: ./go-signsafe-jwt/Dockerfile
+    container_name: go_signsafe_jwt
+    restart: always
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8001:8001"
+    environment:
+      PORT: 8001
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ewallet_user
+      DB_PASS: ewallet_pass
+      DB_NAME: ewallet_db
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    networks:
+      - appnet
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./sveltekit-signsafe/Dockerfile
+    container_name: sveltekit_signsafe
+    depends_on:
+      - signsafe
+      - signsafe-jwt
+    restart: always
+    ports:
+      - "4173:4173"
+    networks:
+      - appnet
+    environment:
+      VITE_API1_BASE_URL: http://signsafe:8000/api
+      VITE_API2_BASE_URL: http://signsafe-jwt:8001/api
 
 volumes:
-    db_data:
-    redis_data:
+  db_data:
+  redis_data:
 
+networks:
+  appnet:
+    driver: bridge

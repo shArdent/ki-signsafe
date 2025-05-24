@@ -2,7 +2,9 @@ package db
 
 import (
 	"context"
+	"ewallet-backend-jwt/utils"
 	"fmt"
+	"log"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -10,13 +12,19 @@ import (
 var RedisClient *redis.Client
 
 func InitRedis() {
+	redisHost := utils.GetEnv("REDIS_HOST", "localhost")
+	redisPort := utils.GetEnv("REDIS_PORT", "6379")
+
+	addr := fmt.Sprintf("%s:%s", redisHost, redisPort)
+
 	RedisClient = redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: addr,
 	})
 
 	err := RedisClient.Ping(context.Background()).Err()
 	if err != nil {
-		fmt.Println(err.Error())
-		panic("failed to connect to Redis")
+		log.Fatalf("Failed to connect to Redis: %v", err)
 	}
+
+	fmt.Println("✅ Connected to Redis")
 }

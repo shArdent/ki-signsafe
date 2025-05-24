@@ -74,8 +74,8 @@
 				<h2 class="text-lg font-semibold text-gray-800">Aktivitas Terakhir</h2>
 			</div>
 
-			<div class="flex flex-col gap-4 w-full">
-				{#if history.length <= 0}
+			<div class="flex w-full flex-col gap-4">
+				{#if !history || history.length <= 0}
 					<p class="w-full text-center text-gray-500">Belum ada riwayat transaksi.</p>
 				{:else}
 					{#each history as item}

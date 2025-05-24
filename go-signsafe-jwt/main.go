@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"ewallet-backend-jwt/auth"
 	"ewallet-backend-jwt/db"
 	"ewallet-backend-jwt/handlers"
+	"ewallet-backend-jwt/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -35,8 +37,12 @@ func main() {
 	secured.Handle("/users", http.HandlerFunc(handlers.UserHandler)).Methods("GET", "OPTIONS")
 	secured.Handle("/users/{id}", http.HandlerFunc(handlers.SingleUserHandler)).Methods("GET", "OPTIONS")
 
-	mainLogger.Println("Server running on port 9000...")
-	if err := http.ListenAndServe(":9000", r); err != nil {
+	PORT := utils.GetEnv("PORT", "8000")
+
+    
+
+	mainLogger.Printf("Server running on port %s...", PORT)
+    if err := http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", PORT), r); err != nil {
 		mainLogger.Fatal("Server failed to start: ", err)
 	}
 }

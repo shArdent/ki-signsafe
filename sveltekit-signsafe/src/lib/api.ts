@@ -1,14 +1,14 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: import.meta.env.VITE_API1_BASE_URL,
     headers: {
         'Content-Type': 'application/json'
     }
 })
 
 export const apiJWT = axios.create({
-    baseURL: 'http://localhost:9000/api',
+    baseURL: import.meta.env.VITE_API2_BASE_URL,
     headers: {
         'Content-Type': 'application/json'
     }
